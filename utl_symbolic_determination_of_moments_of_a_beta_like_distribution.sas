@@ -20,11 +20,10 @@ INPUT
 
   EXAMPLE OUTPUT
 
-  I thought I would take the succesive derivatives of the moment generating function to calcualte the  moments
-   but the MGF was quite complex so I decided to just integrate.
+  I thought I would take the succesive derivatives of the moment generating function to calcualte the the formulas for the moments
+  but the MGF was quite complex so I decided to just integrate to get standard moments.
 
-  MGF = Piecewise((35/16, Eq(8*t**21, 0)), (-(-105*t**19 + 1260*t**17 - 12600*t**15)/(8*t**21) +
-                (840*t**18 - 5040*t**17 + 12600*t**16 - 12600*t**15)*exp(t)/(8*t**21), True))
+  Moments of standard unit beta like distribution
 
                                SYMBOLIC
           1                    EXACT                 EMPERICAL CHECK
@@ -244,4 +243,36 @@ data moments;
     output;
   end;
 run;quit;
+
+
+
+%utl_submit_wps64("
+options set=PYTHONHOME 'C:\Progra~1\Python~1.5\';
+options set=PYTHONPATH 'C:\Progra~1\Python~1.5\lib\';
+proc python;
+submit;
+from sympy import *;
+import pandas as pd;
+x, t = symbols('x t');
+
+cdf=integrate(exp(tx) * 105 * x * (x**(2) * (1 - x**2) **(2))/8,(x));
+print('CDF');
+print(cdf);
+
+mean=integrate(x * 105 * (x**(2) * (1 - x**2) **(2))/8,(x,0,1));
+print('MEAN');
+print(mean);
+
+stdev=integrate(x**2 * 105 * (x**(2) * (1 - x**2) **(2))/8,(x,0,1));
+print('STDEV');
+print(stdev);
+
+skewness=integrate(x**3 * 105 * (x**(2) * (1 - x**2) **(2))/8,(x,0,1));
+print('SKEWNESS');
+print(skewness);
+
+endsubmit;
+run;quit;
+");
+
 
